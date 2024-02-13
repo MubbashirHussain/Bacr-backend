@@ -28,6 +28,7 @@ App.use(
 );
 
 App.use(cors())
+App.use(express.urlencoded())
 App.use(express.json())
 App.use("/api/cv", CV_Route);
 App.use('/api/Inventory', InventoryRouter)
