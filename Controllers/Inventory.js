@@ -43,7 +43,7 @@ const Controllers = {
                         .send(SendResponse(false, "File Not Upload", err));
                 }
                 if (result) {
-                    let Data = await new Inventory({ Title, Description, Category, ImageUrl: result.secure_url })
+                    let Data = await new Inventory({ Title, Description, ImageUrl: result.secure_url })
                     console.log(Data)
                     let Save = await Data.save().then(() =>
                         res.status(201).send(

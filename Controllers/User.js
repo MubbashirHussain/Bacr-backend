@@ -7,14 +7,14 @@ let UserController = {
         try {
             let { UserName, Password } = req.body
             let ErrArr = []
-            if (!UserName) ErrArr.push("UserName is Required ")
-            if (!Password) ErrArr.push("Password is Required ")
+            if (!UserName) ErrArr.push("UserName is Required")
+            if (!Password) ErrArr.push("Password is Required")
             if (Password < 6) ErrArr.push("Password Must be Greater than 6 digit")
             if (ErrArr.length > 0) return res.send(SendResponse(false, "", ErrArr))
             let UserExits = await User.findOne({ UserName })
-            if (!UserExits) return res.send(SendResponse(false, "User Not Found"), { UserName })
+            if (!UserExits) return res.status(400).send(SendResponse(false, "User Not Found"), { UserExitsr })
             let token = jwt.sign({ ...UserExits, Password: null }, process.env.SECRET_KEY)
-            if (!token) return res.send(SendResponse(false, 'Token Not Found'))
+            if (!token) return res.status(400).send(SendResponse(false, 'Token Not Found'))
             res.send(SendResponse(true, "User Successfully Login", { UserName, Token: token }))
         } catch (err) {
             res.send(SendResponse(false, "Catch Unknown Error", { ...err }))
@@ -58,3 +58,6 @@ let UserController = {
     },
 }
 module.exports = UserController
+
+
+

@@ -1,10 +1,11 @@
 const Controllers = require('../Controllers/SpareParts')
+const { ProtectByAuth } = require('../Controllers/User')
 const router = require("express").Router()
 
 
 router.get('/', Controllers.getAll)
-    .post('/', Controllers.post)
-    .delete('/', Controllers.delete)
+    .post('/' ,ProtectByAuth, Controllers.post)
+    .delete('/',ProtectByAuth, Controllers.delete)
 
 
 module.exports = router

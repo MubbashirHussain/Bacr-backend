@@ -1,13 +1,14 @@
 const Controllers = require('../Controllers/Projects')
+const { ProtectByAuth } = require('../Controllers/User')
 const router = require("express").Router()
 
 
 router.get('/', Controllers.getAll)
     .get('/:id', Controllers.getById)
-    .post('/', Controllers.post)
+    .post('/',ProtectByAuth, Controllers.post)
     // .put('/:id', Controllers.put)
-    .patch('/:id', Controllers.patch)
-    .delete('/:id', Controllers.delete)
+    .patch('/:id',ProtectByAuth, Controllers.patch)
+    .delete('/:id',ProtectByAuth, Controllers.delete)
 
 
 module.exports = router
