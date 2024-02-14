@@ -28,7 +28,7 @@ const Controllers = {
         try {
             let { Team, ApplyingFor, FullName } = req.body
             let File = req.files.CV;
-            let AllowedArry = ["ManagemntTeam", "HVACRTeam", "ServiceTeam"]
+            let AllowedArry = ["ManagementTeam", "HVACRTeam", "ServiceTeam"]
             let Allowed = AllowedArry.findIndex((Name) => Name === Team)
             let ErrArray = []
             if (!Team) ErrArray.push("Team Is Required");
