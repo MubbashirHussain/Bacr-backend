@@ -36,7 +36,7 @@ const Controllers = {
                     .status(400)
                     .send(SendResponse(false, "There is Some  Error", ErrArray));
             }
-            cloudinary.uploader.upload(File.tempFilePath, async function (err, result) {
+            cloudinary.uploader.upload(File.tempFilePath, {folder: "Bacr/Inventory",},async function (err, result) {
                 if (err) {
                     return res
                         .status(400)

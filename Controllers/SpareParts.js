@@ -1,7 +1,5 @@
 const Spareparts = require('../Model/SpareParts');
 const { SendResponse } = require('../Helpers/HelperFx');
-const cloudinary = require("cloudinary").v2;
-
 const Controllers = {
     getAll: async (req, res) => {
         try {
