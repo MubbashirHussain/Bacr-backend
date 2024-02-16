@@ -9,15 +9,18 @@ let UserController = {
             let ErrArr = []
             if (!UserName) ErrArr.push("UserName is Required")
             if (!Password) ErrArr.push("Password is Required")
-            if (Password < 6) ErrArr.push("Password Must be Greater than 6 digit")
-            if (ErrArr.length > 0) return res.send(SendResponse(false, "", ErrArr))
+            if (Password.length < 6) ErrArr.push("Password Must be Greater than 6 digit")
+            if (ErrArr.length > 0) return res.status(400).send(SendResponse(false, "", ErrArr))
             let UserExits = await User.findOne({ UserName })
-            if (!UserExits) return res.status(400).send(SendResponse(false, "User Not Found"), { UserExitsr })
+            if (!UserExits) return res.status(400).send(SendResponse(false, "User Not Found", { UserName }))
+            let EnPassword = await bcrypt.compare(Password, UserExits._doc.Password)
+            if (!EnPassword) return res.status(400).send(SendResponse(false, "Incorrect Password", { UserName }))
             let token = jwt.sign({ ...UserExits, Password: null }, process.env.SECRET_KEY)
             if (!token) return res.status(400).send(SendResponse(false, 'Token Not Found'))
+            console.log(UserExits)
             res.send(SendResponse(true, "User Successfully Login", { UserName, Token: token }))
         } catch (err) {
-            res.send(SendResponse(false, "Catch Unknown Error", { ...err }))
+            res.status(400).send(SendResponse(false, "Catch Unknown Error", { ...err }))
         }
     },
     Signup: async (req, res) => {
@@ -27,13 +30,13 @@ let UserController = {
             if (!UserName) ErrArr.push("UserName is Required ")
             if (!Password) ErrArr.push("Password is Required ")
             if (Password < 6) ErrArr.push("Password Must be Greater than 6 digit")
-            if (Password < 6) return res.send(SendResponse())
+            if (Password < 6) return res.send(SendResponse(false, ""))
             let UserExits = await User.findOne({ UserName })
             if (UserExits) return res.send(SendResponse(false, "User Already Exits", { UserName }))
             let EnPassword = await bcrypt.hash(Password, 10)
             if (EnPassword) {
                 let Response = await User({ UserName, Password: EnPassword }).save()
-                res.send(SendResponse(true, "User Successfully Created", Response))
+                res.status(400).send(SendResponse(true, "User Successfully Created", Response))
             }
         } catch (err) {
             res.send(SendResponse(false, "Catch Unknown Error", err))
@@ -50,10 +53,10 @@ let UserController = {
             } else {
                 res
                     .status(407)
-                    .send(SendResponse(false, "invalid Token", decoded ));
+                    .send(SendResponse(false, "invalid Token", decoded));
             }
         } catch (err) {
-            res.status(407).send(SendResponse(false, "invalid Token Err", err ));
+            res.status(407).send(SendResponse(false, "invalid Token Err", err));
         }
     },
 }
